@@ -1,0 +1,157 @@
+﻿<Window x:Class="OpenGD77CPS.ChannelEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenGD77CPS"
+        xmlns:vm="clr-namespace:OpenGD77CPS.ViewModels"
+        mc:Ignorable="d"
+        Title="ChannelEditWindow" Height="480" Width="600">
+    
+    <Window.Resources>
+
+        <DataTemplate DataType="{x:Type vm:ChannelEditVM}">
+            <DockPanel HorizontalAlignment="Left" Width="540">
+
+                <StackPanel DockPanel.Dock="Left" Margin="10,0,10,0" Width="150">
+                    <DockPanel>
+                        <Label  DockPanel.Dock="Left" Content="Channel Number: " />
+                        <TextBlock Text="{Binding Path=Channel.Number}" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    
+                    <Border BorderBrush="LightGray" BorderThickness="1">
+                        <StackPanel Margin="10,5,10,10">
+                            <TextBlock Text="Name" />
+                            <TextBox Text="{Binding Channel.Name}"  />
+
+                            <TextBlock Text="Type" />
+                            <ComboBox x:Name="channelType" SelectedItem="{Binding Channel.Type}" 
+                                ItemsSource="{Binding Source={StaticResource getChannelTypeValues}}" />
+
+                            <TextBlock Text="Rx Freq" />
+                            <TextBox Text="{Binding Channel.RxFrequency}"  />
+
+                            <TextBlock Text="Tx Freq" />
+                            <TextBox Text="{Binding Channel.TxFrequency}" />
+                        </StackPanel>
+                    </Border>
+
+                    <DockPanel Margin="5"/>
+
+                    <Label Content="Channel Options" />
+                    <Border BorderBrush="LightGray" BorderThickness="1">
+                        <StackPanel Margin="10,5,10,10">
+                            <TextBlock Text="Tx Power Override" />
+                            <ComboBox SelectedItem="{Binding Channel.Power}"
+                                        ItemsSource="{Binding Source={StaticResource getChannelPowerValues}}" />
+
+
+                            <TextBlock Text="Tx TimeOut Timer" />
+                            <ComboBox SelectedItem="{Binding Channel.TOT}"
+                                        ItemsSource="{Binding Source={StaticResource getChannelTOTValues}}" />
+
+                            <DockPanel Margin="0,7,0,0">
+                                <TextBlock Text="Receive Only" Margin="0,0,5,0"/>
+                                <CheckBox IsChecked="{Binding Channel.RxOnly}" HorizontalAlignment="Right"/>
+                            </DockPanel>
+
+                            <DockPanel Margin="0,7,0,0">
+                                <TextBlock Text="VOX Enabled" Margin="0,0,5,0"/>
+                                <CheckBox IsChecked="{Binding Channel.Vox}" HorizontalAlignment="Right"/>
+                            </DockPanel>
+
+                            <DockPanel Margin="0,7,0,0">
+                                <TextBlock Text="Beep Disabled" Margin="0,0,5,0"/>
+                                <CheckBox IsChecked="{Binding Channel.NoBeep}" HorizontalAlignment="Right"/>
+                            </DockPanel>
+
+                            <DockPanel Margin="0,7,0,0">
+                                <TextBlock Text="Eco-Mode Disabled" Margin="0,0,5,0"/>
+                                <CheckBox IsChecked="{Binding Channel.NoEco}" HorizontalAlignment="Right"/>
+                            </DockPanel>
+
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Width="150" Margin="10" >
+                    <Label Content="Analogue Settings" />
+                    <Border BorderBrush="LightGray" BorderThickness="1" IsEnabled="{Binding Source={x:Reference Name=channelType}, Path=SelectedItem, Converter={StaticResource isChannelTypeAnalogue}}">
+                        <StackPanel Margin="5" >
+                            <Label Content="FM Bandwidth" />
+                            <ComboBox SelectedItem="{Binding Channel.Bandwidth}"
+                                        ItemsSource="{Binding Source={StaticResource getChannelBandwidthValues}}" Margin="5,0,5,0" />
+
+                            <Label Content="Tx Access Tone/Code" />
+                            <ComboBox SelectedItem="{Binding Channel.TxTone}"
+                                        ItemsSource="{Binding Source={StaticResource getSubToneValues}}" Margin="5,0,5,0" />
+
+                            <Label Content="Rx Access Tone/Code" />
+                            <ComboBox SelectedItem="{Binding Channel.RxTone}"
+                                        ItemsSource="{Binding Source={StaticResource getSubToneValues}}" Margin="5,0,5,0" />
+
+                            <Label Content="Squelch Override" />
+                            <ComboBox SelectedItem="{Binding Channel.Squelch}"
+                                        ItemsSource="{Binding Source={StaticResource getChannelSquelchValues}}" Margin="5,0,5,0" />
+
+                        </StackPanel>
+                    </Border>
+
+                    <DockPanel Margin="10"/>
+
+                    <Label Content="Digital Settings" />
+                    <Border BorderBrush="LightGray" BorderThickness="1" IsEnabled="{Binding Source={x:Reference Name=channelType}, Path=SelectedItem, Converter={StaticResource isChannelTypeDigital}}">
+                        <StackPanel Margin="5" >
+                            <Label Content="DMR Color Code" Margin="2" />
+                            <TextBox Text="{Binding Channel.Colorcode}" Margin="5,0,5,0" />
+
+                            <Label Content="DMR Time Slot" Margin="2" />
+                            <ComboBox ItemsSource="{Binding Source={StaticResource getChannelBandwidthValues}}"
+                                      SelectedItem="{Binding Channel.Timeslot}" Margin="5,0,5,0" /> 
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+                
+                <StackPanel DockPanel.Dock="Right" Margin="10" Width="150">
+                    <Label Content="DMR Advanced Options" />
+                    <Border BorderBrush="LightGray" BorderThickness="1" IsEnabled="{Binding Source={x:Reference Name=channelType}, Path=SelectedItem, Converter={StaticResource isChannelTypeDigital}}">
+                        <StackPanel Margin="5">
+                            <Label Content="Override DMR ID" Margin="2" />
+                            <TextBox Text="{Binding Channel.DMRId}" Margin="5,0,5,0" />
+
+                            <Label Content="Tx Default Contact" Margin="2" />
+                            <ComboBox ItemsSource="{Binding Contacts}" SelectedItem="{Binding Channel.txContact}" Margin="5,0,5,0" />
+                            <Label Content="Rx Contact List" Margin="2" />
+                            <ComboBox ItemsSource="{Binding ContactGroups}" SelectedItem="{Binding Channel.rxGroup}" Margin="5,0,5,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <DockPanel Margin="10"/>
+
+                    <Label Content="Scanning Options" />
+                    <Border BorderBrush="LightGray" BorderThickness="1" >
+                        <StackPanel Margin="5">
+                            <DockPanel Margin="0,7,0,0">
+                                <TextBlock Text="Skip Channel when scanning All Channels" TextWrapping="Wrap" Height="35"/>
+                                <CheckBox IsChecked="{Binding Channel.RxOnly}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </DockPanel>
+
+                            <DockPanel Margin="0,7,0,0">
+                                <TextBlock Text="Skip Channel when scanning in Zones" TextWrapping="Wrap" Height="35"/>
+                                <CheckBox IsChecked="{Binding Channel.RxOnly}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+            </DockPanel>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vm:ChannelEditVM />
+    </Window.DataContext>
+    
+    <ContentControl Content="{Binding }" HorizontalAlignment="Center" Margin="10" />
+
+</Window>

@@ -1,0 +1,70 @@
+﻿<Window x:Class="OpenGD77CPS.ContactsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenGD77CPS"
+        xmlns:vm="clr-namespace:OpenGD77CPS.ViewModels"
+        mc:Ignorable="d"
+        Title="ContactsWindow" Height="500" Width="500">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:ContactsVM}">
+            <DockPanel Margin="20">
+
+                <DockPanel DockPanel.Dock="Top" Width="250" HorizontalAlignment="Left">
+                    <Button Content="Add Contact" Width="100"
+                            Command="{Binding Path=AddContactCommand}" />
+                    <Button Content="Delete Contact" Width="100"
+                        Command="{Binding Path=DeleteContactCommand}"
+                        CommandParameter="{Binding ElementName=contactsList, Path=SelectedItem}"/>
+                </DockPanel>
+
+                <DockPanel Width="200" Margin="10" DockPanel.Dock="Left" HorizontalAlignment="Left">
+                    <ListView Name="contactsList" ItemsSource="{Binding Contacts}">
+                        <ListView.InputBindings>
+                            <KeyBinding Key="Delete" Command="{Binding DeleteContactCommand}" 
+                                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type ListView}},
+                                        Path=SelectedItem}"/>
+                        </ListView.InputBindings>
+                        <ListView.ItemTemplate >
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Name}" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Number}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DockPanel>
+
+                <DockPanel Margin="10" DockPanel.Dock="Right">
+                    <StackPanel Width="150" HorizontalAlignment="Left">
+                        <Label Content="Contact Name" />
+                        <TextBox Margin="10,0,10,0" Text="{Binding ElementName=contactsList, Path=SelectedItem.Name}" />
+                        <Label Content="Contact ID" />
+                        <TextBox Margin="10,0,10,0" Text="{Binding ElementName=contactsList, Path=SelectedItem.Number}" />
+                        <Label Content="Contact Type" />
+                        <ComboBox Margin="10,0,10,0" ItemsSource="{Binding Source={StaticResource getContactTypeValues}}" 
+                                  SelectedValue="{Binding ElementName=contactsList, Path=SelectedItem.Type}" />
+                        <Label Content="Timeslot Override" />
+                        <ComboBox Margin="10,0,10,0" ItemsSource="{Binding Source={StaticResource getTimeSlotValues}}" 
+                                  SelectedValue="{Binding ElementName=contactsList, Path=SelectedItem.OverrideTS}" />
+                    </StackPanel>
+                </DockPanel>
+
+            </DockPanel>
+        </DataTemplate>
+
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vm:ContactsVM />
+    </Window.DataContext>
+
+    <ContentControl Content="{Binding }" />
+
+</Window>
