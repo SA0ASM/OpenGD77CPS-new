@@ -659,8 +659,8 @@ namespace OpenGD77CPS
                         stream.WriteByte((byte)contact.Type);
 
                         // not used in firmware?
-                        stream.WriteByte((byte)0);
-                        stream.WriteByte((byte)0);
+                        stream.WriteByte((byte)0xff);
+                        stream.WriteByte((byte)0xff);
 
                         // read and parse flags
                         byte reserve1 = 0;
@@ -674,7 +674,7 @@ namespace OpenGD77CPS
                     {
                         // write empty contact
                         var ba = new byte[CODEPLUG_CONTACT_DATA_SIZE];
-                        Array.Fill(ba, (byte)0);
+                        Array.Fill(ba, (byte)0xff);
                         stream.Write(ba);
                     }
                 }
