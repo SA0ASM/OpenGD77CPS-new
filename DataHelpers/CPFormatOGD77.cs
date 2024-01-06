@@ -115,16 +115,16 @@ namespace OpenGD77CPS
         }
         #endregion
 
-        private static byte[] getBytes(codeplugChannel chan)
+        private static byte[] getBytes<T>(T obj)
         {
-            int size = Marshal.SizeOf(chan);
+            int size = Marshal.SizeOf(obj);
             byte[] arr = new byte[size];
 
             IntPtr ptr = IntPtr.Zero;
             try
             {
                 ptr = Marshal.AllocHGlobal(size);
-                Marshal.StructureToPtr(chan, ptr, true);
+                Marshal.StructureToPtr<T>(obj, ptr, false);
                 Marshal.Copy(ptr, arr, 0, size);
             }
             finally
